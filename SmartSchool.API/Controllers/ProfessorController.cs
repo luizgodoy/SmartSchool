@@ -15,28 +15,40 @@ namespace SmartSchool.API.Controllers
     [ApiController]
     public class ProfessorController : ControllerBase
     {
-        private readonly SmartContext _context;
+        private readonly IRepository _repos;
 
-        public ProfessorController(SmartContext context)
+        public ProfessorController(IRepository repos)
         {
-            this._context = context;
+            _repos = repos;
         }
 
         // GET: api/<ProfessorController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_context.Professores);
+            return Ok(_repos.GetAllProfessores());
         }
 
         // GET api/<ProfessorController>/5
         [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
         {
-            var professor = _context.Professores.FirstOrDefault(p => p.Id == id);
+            var professor = _repos.GetProfessorById(id);
 
             if (professor == null)
-                return BadRequest("Professor não encontrado!");
+                return BadRequest("Registros não encontrado!");
+
+            return Ok(professor);
+        }
+
+        // GET api/<ProfessorController>/5
+        [HttpGet("byDisciplinaId/{id}")]
+        public IActionResult GetByDisciplinaId(int id)
+        {
+            var professor = _repos.GetAllProfessoresByDisciplinaId(id);
+
+            if (professor == null)
+                return BadRequest("Registro não encontrado!");
 
             return Ok(professor);
         }
@@ -45,7 +57,7 @@ namespace SmartSchool.API.Controllers
         [HttpGet("byName")]
         public IActionResult GetByName(string nome)
         {
-            var professor = _context.Professores.FirstOrDefault(p => p.Nome.Contains(nome));
+            var professor = _repos.GetAllProfessores().FirstOrDefault(p => p.Nome.Contains(nome));
 
             if (professor == null)
                 return BadRequest("Professor não encontrado!");
@@ -57,8 +69,8 @@ namespace SmartSchool.API.Controllers
         [HttpPost]
         public IActionResult Post(Professor professor)
         {
-            _context.Add(professor);
-            _context.SaveChanges();
+            _repos.Add(professor);
+            _repos.SaveChanges();
             return Ok(professor);
         }
 
@@ -66,13 +78,14 @@ namespace SmartSchool.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Professor professor)
         {
-            var registro = _context.Professores.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var registro = _repos.GetProfessorById(id);
 
             if (registro == null) 
                 return BadRequest("Não foi possível atualizar o registro do professor!");
 
-            _context.Update(professor);
-            _context.SaveChanges();
+            _repos.Update(professor);
+            _repos.SaveChanges();
+
             return Ok(professor);
         }
 
@@ -80,13 +93,14 @@ namespace SmartSchool.API.Controllers
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Professor professor)
         {
-            var registro = _context.Professores.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var registro = _repos.GetProfessorById(id);
 
             if (registro == null)
                 return BadRequest("Não foi possível atualizar o registro do professor!");
 
-            _context.Update(professor);
-            _context.SaveChanges();
+            _repos.Update(professor);
+            _repos.SaveChanges();
+
             return Ok(professor);
         }
 
@@ -94,13 +108,14 @@ namespace SmartSchool.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var prof = _context.Professores.FirstOrDefault(p => p.Id == id);
+            var prof = _repos.GetProfessorById(id);
 
             if (prof == null)
                 return BadRequest("Não possivel <b>remover</b> o registro de professor!");
 
-            _context.Remove(prof);
-            _context.SaveChanges();
+            _repos.Delete(prof);
+            _repos.SaveChanges();
+
             return Ok();
         }
     }
