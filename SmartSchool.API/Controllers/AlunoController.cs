@@ -15,27 +15,40 @@ namespace SmartSchool.API.Controllers
     [ApiController]
     public class AlunoController : ControllerBase
     {
-        private readonly SmartContext _context;
+        private readonly IRepository _repos;
 
-        public AlunoController(SmartContext context)
+        public AlunoController(IRepository repos)
         {
-            _context = context;
-        }
+            _repos = repos;
+        }        
+        
         // GET: api/<AlunoController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_context.Alunos);
+            return Ok(_repos.GetAllAlunos(true));
         }
 
         // GET api/<AlunoController>/5
         [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
         {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
+            var aluno = _repos.GetAlunoById(id, true);
 
             if (aluno == null)
-                return BadRequest("Aluno não encontrado!");
+                return BadRequest("Registro não encontrado!");
+
+            return Ok(aluno);
+        }
+
+        // GET api/<AlunoController>/5
+        [HttpGet("byId/{id}")]
+        public IActionResult GetByDisciplinaId(int id)
+        {
+            var aluno = _repos.GetAllAlunosByDisciplinaId(id, true);
+
+            if (aluno == null)
+                return BadRequest("Registro não encontrado!");
 
             return Ok(aluno);
         }
@@ -44,7 +57,7 @@ namespace SmartSchool.API.Controllers
         [HttpGet("ByName")]
         public IActionResult GetByName(string nome, string sobrenome)
         {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Nome.Contains(nome) && a.Sobrenome.Contains(sobrenome));
+            var aluno = _repos.GetAllAlunos(false).FirstOrDefault(a => a.Nome.Contains(nome) && a.Sobrenome.Contains(sobrenome));
 
             if (aluno == null)
                 return BadRequest("Aluno não encontrado!");
@@ -56,47 +69,63 @@ namespace SmartSchool.API.Controllers
         [HttpPost]
         public IActionResult Post(Aluno aluno)
         {
-            _context.Add(aluno);
-            _context.SaveChanges();
-            return Ok(aluno);
+            _repos.Add(aluno);
+
+            if(_repos.SaveChanges())
+                return Ok(aluno);
+
+            return BadRequest("Registro não cadastrado!");
         }
 
         // PUT api/<AlunoController>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
-            var registro = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
-            if (registro == null) return BadRequest("Não foi possível atualizar o registro de aluno!");
+            var registro = _repos.GetAlunoById(id);
+            
+            if (registro == null) 
+                return BadRequest("Não foi possível atualizar o registro!");
 
-            _context.Update(aluno);
-            _context.SaveChanges();
-            return Ok(aluno);
+            _repos.Update(aluno);
+
+            if (_repos.SaveChanges())
+                return Ok(aluno);
+
+            return BadRequest("Registro não atualizado!");
         }
 
         // PATCH api/<AlunoController>/5
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Aluno aluno)
         {
-            var registro = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
-            if (registro == null) return BadRequest("Não foi possível atualizar o registro de aluno!");
+            var registro = _repos.GetAlunoById(id);
+            
+            if (registro == null) 
+                return BadRequest("Não foi possível atualizar o registro!");
 
-            _context.Update(aluno);
-            _context.SaveChanges();
-            return Ok(aluno);
+            _repos.Update(aluno);
+
+            if (_repos.SaveChanges())
+                return Ok(aluno);
+
+            return BadRequest("Registro não atualizado!");
         }
 
         // DELETE api/<AlunoController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
+            var aluno = _repos.GetAlunoById(id);
 
             if (aluno == null)
-                return BadRequest("Não possivel <b>remover</b> o registro de aluno!");
+                return BadRequest("Não foi possível excluir o registro!");
 
-            _context.Remove(aluno);
-            _context.SaveChanges();
-            return Ok();
+            _repos.Delete(aluno);
+
+            if (_repos.SaveChanges())
+                return Ok();
+
+            return BadRequest("Registro não excluído!");
         }
     }
 }
