@@ -19,10 +19,11 @@ namespace SmartSchool.API.Helpers
                 )
                 .ForMember(
                     dest => dest.Idade,
-                    opt => opt.MapFrom(src => src.DataNasc.GtCurrentAge())
+                    opt => opt.MapFrom(src => src.DataNasc.GetCurrentAge())
                 );
 
             CreateMap<AlunoDto, Aluno>();
+
             CreateMap<Aluno, AlunoRegistrarDto>().ReverseMap();
         }
     }

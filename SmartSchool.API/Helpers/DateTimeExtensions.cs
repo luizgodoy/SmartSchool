@@ -7,10 +7,10 @@ namespace SmartSchool.API.Helpers
 {
     public static class DateTimeExtensions
     {
-        public static int GtCurrentAge(this DateTime dateTime)
+        public static int GetCurrentAge(this DateTime dateTime)
         {
             var currentDate = DateTime.UtcNow;
-            int age = currentDate.Year - dateTime.Year;
+            int age = currentDate.Year - (dateTime == null ? DateTime.UtcNow.Year : dateTime.Year);
 
             if (currentDate < dateTime.AddYears(age))
                 age--;

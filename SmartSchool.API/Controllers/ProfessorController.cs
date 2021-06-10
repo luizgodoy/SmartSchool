@@ -11,17 +11,29 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.API.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Controller de professor
+    /// </summary>
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]    
     public class ProfessorController : ControllerBase
     {
         private readonly IRepository _repos;
 
+        /// <summary>
+        /// Contrutor da controller de professor
+        /// </summary>
+        /// <param name="repos"></param>
         public ProfessorController(IRepository repos)
         {
             _repos = repos;
         }
 
+        /// <summary>
+        /// Recupera todos os professores cadastrados
+        /// </summary>
+        /// <returns></returns>
         // GET: api/<ProfessorController>
         [HttpGet]
         public IActionResult Get()
@@ -29,6 +41,11 @@ namespace SmartSchool.API.Controllers
             return Ok(_repos.GetAllProfessores());
         }
 
+        /// <summary>
+        /// Recupera o professor pelo ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<ProfessorController>/5
         [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
@@ -41,6 +58,11 @@ namespace SmartSchool.API.Controllers
             return Ok(professor);
         }
 
+        /// <summary>
+        /// Recupera o professor pela Disciplina
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<ProfessorController>/5
         [HttpGet("byDisciplinaId/{id}")]
         public IActionResult GetByDisciplinaId(int id)
@@ -53,6 +75,11 @@ namespace SmartSchool.API.Controllers
             return Ok(professor);
         }
 
+        /// <summary>
+        /// Recupera o professor pelo nome
+        /// </summary>
+        /// <param name="nome"></param>
+        /// <returns></returns>
         // GET api/ByName?nome=Luiz
         [HttpGet("byName")]
         public IActionResult GetByName(string nome)
@@ -65,6 +92,11 @@ namespace SmartSchool.API.Controllers
             return Ok(professor);
         }
 
+        /// <summary>
+        /// Adiciona um novo professor a base de dados
+        /// </summary>
+        /// <param name="professor"></param>
+        /// <returns></returns>
         // POST api/<ProfessorController>
         [HttpPost]
         public IActionResult Post(Professor professor)
@@ -74,6 +106,12 @@ namespace SmartSchool.API.Controllers
             return Ok(professor);
         }
 
+        /// <summary>
+        /// Atualiza o registro de professor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="professor"></param>
+        /// <returns></returns>
         // PUT api/<ProfessorController>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, Professor professor)
@@ -89,7 +127,13 @@ namespace SmartSchool.API.Controllers
             return Ok(professor);
         }
 
-        // PUT api/<ProfessorController>/5
+        /// <summary>
+        /// Atualizar o registro de professor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="professor"></param>
+        /// <returns></returns>
+        // PATCH api/<ProfessorController>/5
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Professor professor)
         {
@@ -104,6 +148,11 @@ namespace SmartSchool.API.Controllers
             return Ok(professor);
         }
 
+        /// <summary>
+        /// Excluir o registro de professor da base de dados
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE api/<ProfessorController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

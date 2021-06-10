@@ -13,19 +13,32 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.API.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Controller de Aluno
+    /// </summary>
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AlunoController : ControllerBase
     {
         private readonly IRepository _repos;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Construtor principal
+        /// </summary>
+        /// <param name="repos"></param>
+        /// <param name="mapper"></param>
         public AlunoController(IRepository repos, IMapper mapper)
         {
             _repos = repos;
             _mapper = mapper;
         }        
         
+        /// <summary>
+        /// Recupera todos os alunos
+        /// </summary>
+        /// <returns></returns>
         // GET: api/<AlunoController>
         [HttpGet]
         public IActionResult Get()
@@ -34,6 +47,11 @@ namespace SmartSchool.API.Controllers
             return Ok(_mapper.Map<IEnumerable<AlunoDto>>(alunos));
         }
 
+        /// <summary>
+        /// Recupera um aluno específico por ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<AlunoController>/5
         [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
@@ -46,8 +64,13 @@ namespace SmartSchool.API.Controllers
             return Ok(aluno);
         }
 
+        /// <summary>
+        /// Recupera todos os alunos de um disciplina ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET api/<AlunoController>/5
-        [HttpGet("byId/{id}")]
+        [HttpGet("byDisciplinaId/{id}")]
         public IActionResult GetByDisciplinaId(int id)
         {
             var aluno = _repos.GetAllAlunosByDisciplinaId(id, true);
@@ -58,6 +81,12 @@ namespace SmartSchool.API.Controllers
             return Ok(aluno);
         }
 
+        /// <summary>
+        /// Recupera um aluno por nome, exatamente igual a string informada
+        /// </summary>
+        /// <param name="nome"></param>
+        /// <param name="sobrenome"></param>
+        /// <returns></returns>
         // GET api/<AlunoController>/5
         [HttpGet("ByName")]
         public IActionResult GetByName(string nome, string sobrenome)
@@ -71,6 +100,11 @@ namespace SmartSchool.API.Controllers
             return Ok(alunoDto);
         }
 
+        /// <summary>
+        /// Adiciona um novo aluno
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // POST api/<AlunoController>
         [HttpPost]
         public IActionResult Post(AlunoDto model)
@@ -84,6 +118,12 @@ namespace SmartSchool.API.Controllers
             return BadRequest("Registro não cadastrado!");
         }
 
+        /// <summary>
+        /// Atualiza o registro de aluno
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // PUT api/<AlunoController>/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, AlunoDto model)
@@ -102,6 +142,12 @@ namespace SmartSchool.API.Controllers
             return BadRequest("Registro não atualizado!");
         }
 
+        /// <summary>
+        /// Atualiza uma informação de aluno
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         // PATCH api/<AlunoController>/5
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, AlunoDto model)
@@ -120,6 +166,11 @@ namespace SmartSchool.API.Controllers
             return BadRequest("Registro não atualizado!");
         }
 
+        /// <summary>
+        /// Exclui um aluno da base de dados
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE api/<AlunoController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

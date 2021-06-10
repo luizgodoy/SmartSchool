@@ -15,7 +15,7 @@ namespace SmartSchool.API.Dtos
 
         public string Telefone { get; set; }
 
-        public DateTime Idade { get; set; }
+        public int Idade { get; set; }
 
         public bool Ativo { get; set; } = true;
     }
