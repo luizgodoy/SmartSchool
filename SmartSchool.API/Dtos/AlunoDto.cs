@@ -18,6 +18,5 @@ namespace SmartSchool.API.Dtos
         public DateTime Idade { get; set; }
 
         public bool Ativo { get; set; } = true;
-
     }
 }
