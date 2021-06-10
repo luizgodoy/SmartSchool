@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SmartSchool.API.Dtos
 {
-    public class AlunoDto
+    public class AlunoRegistrarDto
     {
         public int Id { get; set; }
 
@@ -13,10 +13,16 @@ namespace SmartSchool.API.Dtos
 
         public string Nome { get; set; }
 
+        public string Sobrenome { get; set; }
+
         public string Telefone { get; set; }
 
-        public DateTime Idade { get; set; }
+        public DateTime DataNasc { get; set; }
 
-        public bool Ativo { get; set; } = true;
+        public DateTime DataIni { get; set; } = DateTime.Now;
+
+        public DateTime? DataFim { get; set; } = null;
+
+        public bool Ativo { get; set; } = true;        
     }
 }

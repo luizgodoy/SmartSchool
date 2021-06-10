@@ -39,7 +39,7 @@ namespace SmartSchool.API.Data
                     new Professor(4, 2, "Rosa","Cestari"),
                     new Professor(5, 1, "Samira", "Abila")
                 });
-
+                
             builder.Entity<Curso>()
                 .HasData(new List<Curso>
                 {
