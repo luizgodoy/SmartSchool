@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.API.Data;
 using SmartSchool.API.Dtos;
+using SmartSchool.API.Helpers;
 using SmartSchool.API.Models;
 using System;
 using System.Collections.Generic;
@@ -34,18 +35,23 @@ namespace SmartSchool.API.Controllers
             _repos = repos;
             _mapper = mapper;
         }        
-        
+
         /// <summary>
         /// Recupera todos os alunos
         /// </summary>
         /// <returns></returns>
         // GET: api/<AlunoController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get([FromQuery] PageParams pageParams)
         {
-            var alunos = _repos.GetAllAlunos(true);
-            return Ok(_mapper.Map<IEnumerable<AlunoDto>>(alunos));
+            var alunos = await _repos.GetAllAlunosAsync(pageParams, true);
+            var alunosResult = _mapper.Map<IEnumerable<AlunoDto>>(alunos);
+
+            Response.AddPagination(alunos.CurrentPage, alunos.PageSize, alunos.TotalCount, alunos.TotalPages);
+
+            return Ok(alunosResult);
         }
+
 
         /// <summary>
         /// Recupera um aluno específico por ID
